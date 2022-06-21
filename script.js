@@ -2,6 +2,8 @@ const selectionButtons = document.querySelectorAll('[data-selection]')
 const finalColumn = document.querySelector('[data-final-column]')
 const computerScoreSpan = document.querySelector('[data-computer-score]')
 const yourScoreSpan = document.querySelector('[data-your-score]')
+const finalResult = document.querySelector('[data-final-result]')
+let isHandled = false
 const SELECTIONS = [
     {
         name: 'rock',
@@ -25,7 +27,7 @@ selectionButtons.forEach(selectionButton => {
     selectionButton.addEventListener('click', e => {
         const selectionName = selectionButton.dataset.selection
         const selection = SELECTIONS.find(selection => selection.name === selectionName)
-        makeSelection(selection)
+        if (!isHandled) makeSelection(selection)
     })
 })
 
@@ -40,6 +42,17 @@ function makeSelection(selection)
 
    if (yourWinner) incrementScore(yourScoreSpan)
    if (computerWinner)  incrementScore(computerScoreSpan)
+
+   if(computerScoreSpan.innerText == 5 || yourScoreSpan.innerText == 5)
+   {
+    checkWinner(yourScoreSpan, computerScoreSpan)
+    isHandled = true;
+    setTimeout(() => {
+            setTimeout(() => {reloadWebsite() });
+    }, 1500);
+        
+
+   } 
 }
 
 function incrementScore(scorespan)
@@ -66,3 +79,22 @@ function randomSelection()
     const RandomIndex = Math.floor(Math.random() * SELECTIONS.length)
     return SELECTIONS[RandomIndex]
 }
+
+
+function checkWinner(YourScore, ComputerScore)
+{
+    const div = document.createElement('div')
+    if (YourScore.innerText == 5) div.innerText += 'You have won'
+    else if(ComputerScore.innerText == 5) div.innerText += 'Computer has won'
+    div.classList.add('end-result')
+finalResult.after(div)
+    
+}
+
+function reloadWebsite()
+{
+    window.location.reload();
+}
+
+
+
